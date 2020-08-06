@@ -1,0 +1,38 @@
+{
+  "name": "myemployeedb",
+  "version": "1.0.0",
+  "description": "A command-line application to manage a company's employee database, using Node.js, Inquirer, and MySQL.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Devmadia/MyEmployeeDB.git"
+  },
+  "keywords": [
+    "Node.js",
+    "Inquirer",
+    "MySQL",
+    "database",
+    "employee",
+    "database",
+    "CMS",
+    "content",
+    "management",
+    "system",
+    "command-line",
+    "application"
+  ],
+  "author": "Devmadia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Devmadia/MyEmployeeDB/issues"
+  },
+  "homepage": "https://github.com/Devmadia/MyEmployeeDB#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.3.3",
+    "mysql2": "^2.1.0"
+  }
+}
