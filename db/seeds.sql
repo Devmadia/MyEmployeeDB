@@ -23,6 +23,9 @@ VALUES
     ('Dinah', 'Wildman', 4, null),
     ('Johnathan', 'Harker', 5, 2),
     ('Pablo', 'Rabien', 6, 1),
-    ('')
+    ('Eum', 'Charles', 7, null),
+    ('Ashley', 'Martinez', 8, 2),
+    ('Sabine', 'Beals', 9, 1),
+    ('Rachel', 'Sanchez', 10, null);
 
 
