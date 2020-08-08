@@ -1,6 +1,10 @@
+DROP TABLE IF EXISTS employee_trackerDB;
+CREATE DATABASE employee_trackerDB;
+USE employee_trackerDB;
+
+DROP TABLE IF EXISTS employees;
 DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS roles;
-DROP TABLE IF EXISTS employees;
 
 CREATE TABLE departments (
     id INTEGER,
