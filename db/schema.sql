@@ -3,8 +3,8 @@ CREATE DATABASE employee_trackerDB;
 USE employee_trackerDB;
 
 DROP TABLE IF EXISTS employees;
-DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS departments;
 
 CREATE TABLE departments(
     id INTEGER NOT NULL AUTO_INCREMENT,
@@ -16,9 +16,9 @@ CREATE TABLE roles(
     id INTEGER NOT NULL AUTO_INCREMENT,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL,
-    department_id INTEGER,
+    department_id INTEGER NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT fk_departments FOREIGN KEY (department_id) REFERENCES departments(id)
+    FOREIGN KEY (department_id) REFERENCES departments(id)
 );
 
 -- need to get manager_id to reference employee(id)
@@ -30,6 +30,6 @@ CREATE TABLE employees(
     role_id INTEGER,
     manager_id INTEGER,
     PRIMARY KEY (id),
-    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles(id),
-    CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES employees(id) ON DELETE SET NULL
+    FOREIGN KEY (role_id) REFERENCES roles(id),
+    FOREIGN KEY (manager_id) REFERENCES employees(id)
 );
