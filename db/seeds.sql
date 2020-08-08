@@ -15,18 +15,17 @@ VALUES
     ('Legal Team Lead', 275000, 4),
     ('Lawyer', 100000, 4);
 
-INSERT INTO employees (first_name, last_name, role_id, manager_id) 
-VALUES
-    ('Aleksander', 'Roshane', 1, 3),
-    ('Tobias', 'Kohl', 2, 3),
-    ('Jeremiah', 'Hall', 3, null),
-    ('Dinah', 'Wildman', 4, 7),
-    ('Johnathan', 'Harker', 5, 10),
-    ('Pablo', 'Rabien', 6, 10),
-    ('Eum', 'Charles', 7, null),
-    ('Ashley', 'Martinez', 8, 7),
-    ('Sabine', 'Beals', 9, 3),
-    ('Rachel', 'Sanchez', 10, null);
+-- must maintain uniformity with 'INSERT INTO employees...' because database references for employees table doesn't yet exist to be referenced
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Aleksander', 'Roshane', 1, null);
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Tobias', 'Kohl', 2, 1);
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Jeremiah', 'Hall', 3, 2);
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Dinah', 'Wildman', 4, 3);
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Johnathan', 'Harker', 5, null);
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Pablo', 'Rabien', 6, 5);
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Eum', 'Charles', 7, null);
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Ashley', 'Martinez', 1, 1);
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Sabine', 'Beals', 2, 3);
+INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Rachel', 'Sanchez', 3, null);
 
 SELECT * FROM departments;
 SELECT * FROM roles;

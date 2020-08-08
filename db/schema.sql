@@ -28,9 +28,9 @@ CREATE TABLE employees(
     id INTEGER AUTO_INCREMENT,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    role_id INTEGER NOT NULL,
-    PRIMARY KEY (id),
+    role_id INTEGER,
     manager_id INTEGER,
+    PRIMARY KEY (id),
     FOREIGN KEY (role_id) REFERENCES roles(id),
-    FOREIGN KEY(manager_id) REFERENCES employees(id)
+    FOREIGN KEY (manager_id) REFERENCES employees(id)
 );
