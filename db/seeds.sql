@@ -27,3 +27,7 @@ VALUES
     ('Ashley', 'Martinez', 8, 7),
     ('Sabine', 'Beals', 9, 3),
     ('Rachel', 'Sanchez', 10, null);
+
+SELECT * FROM departments;
+SELECT * FROM roles;
+SELECT * FROM employees;
