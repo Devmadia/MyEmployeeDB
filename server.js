@@ -1,16 +1,41 @@
-const mysql = require('mysql2');
+const inquirer = require('inquirer');
+const cTable = require('console.table');
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  port: 3306,
-  // Your MySQL username
-  user: 'root',
-  // Your MySQL password
-  password: '',
-  database: 'employee_trackerDB'
-});
+// imports the connection module
+const connection = require('./db/connect');
 
-connection.connect(err => {
-    if (err) throw err;
-    console.log('connected as id ' + connection.threadId + '\n');
-  });
+const init = () => {
+    // creates the ascii banner
+    var figlet = require('figlet');
+ 
+    figlet('EMPLOYEE MANAGER', {
+        font: 'Big',
+        horizontalLayout: 'default',
+        verticalLayout: 'default',
+        width: 80,
+        whitespaceBreak: true
+    }, function(err, data) {
+        if (err) {
+            console.log('Something went wrong...');
+            console.dir(err);
+            return;
+        }
+        console.log(data)
+    });
+    // inquirer
+    //         .prompt([
+    //             {
+                   
+    //             }
+    //         ])
+    //         .then((data) => {
+    //             console.log("You've made it this far.") 
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+}
+
+
+// function call to initialize program
+init();

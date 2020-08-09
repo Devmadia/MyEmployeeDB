@@ -32,6 +32,7 @@
   "homepage": "https://github.com/Devmadia/MyEmployeeDB#readme",
   "dependencies": {
     "console.table": "^0.10.0",
+    "figlet": "^1.5.0",
     "inquirer": "^7.3.3",
     "mysql2": "^2.1.0"
   }
