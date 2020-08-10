@@ -21,9 +21,9 @@
 
   Navigate with arrow keys and press [ENTER] once on the appropriate input field. Utilize [QUIT] to exit the application once done adding, removing, or updating employees in the tracker.
 
-  ![My Employee DB](.\assets\images\MyEmployeeDB000.png) 
+  ![My Employee DB](assets/images/MyEmployeeDB000.png) 
   
-  ![My Employee DB](.\assets\images\MyEmployeeDB0-0.png) 
+  ![My Employee DB](assets/images/MyEmployeeDB0-0.png) 
 
   ## License
   This project is covered by the MIT license. 
