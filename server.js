@@ -79,13 +79,13 @@ const init = () => {
 
 // Department Functions
 const departmentView = () => {
-    info
-        .
-        .then(([ row ]) => {
-            console.table(row);
-            init();
-        })
-        .catch(console.log);
+    // info
+    //     .
+    //     .then(([ row ]) => {
+    //         console.table(row);
+    //         init();
+    //     })
+    //     .catch(console.log);
 }
 
 
