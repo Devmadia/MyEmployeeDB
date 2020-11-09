@@ -1,272 +1,261 @@
 const inquirer = require('inquirer');
-const db = require('./db/query');
-require('console.table');
+const logo = require('asciiart-logo');
 
-function listOfPrompts() {
-    inquirer.prompt([
-        {
-            type: 'list',
-            name: 'choice',
-            message: 'Please select an option.',
-            choices: [
-                {
-                    name: 'View All Departments',
-                    value: 'viewDepts'
-                },
-                {
-                    name: 'View All Roles',
-                    value: 'viewRoles'
-                },
-                {
-                    name: 'View All Employees',
-                    value: 'viewEmployees'
-                },
-                {
-                    name: 'Add a Department',
-                    value: 'addDept'
-                },
-                {
-                    name: 'Add a Role',
-                    value: 'addRole'
-                },
-                {
-                    name: 'Add an Employee',
-                    value: 'addEmployee'
-                },
-                {
-                    name: 'Update an Employee Role',
-                    value: 'updateRole'
-                },
-                {
-                    name: 'Quit Application',
-                    value: 'quit'
-                }
-            ]
-        }
-    ]).then(res => {
-        const choice = res.choice;
+const Query = require('./lib/Query');
 
-        switch (choice) {
-            case 'viewDepts':
-                viewDepts();
-                break;
-            case 'viewRoles':
-                viewRoles();
-                break;
-            case 'viewEmployees':
-                viewEmployees();
-                break;
-            case 'addDept':
-                addDept();
-                break;
-            case 'addRole':
-                addRole();
-                break;
-            case 'addEmployee':
-                addEmployee();
-                break;
-            case 'updateRole':
-                updateRole();
-                break;
-            case 'quit':
-                quit();
-                break;
-        }
-    })
+const query = new Query();
+
+// Menu options on load
+const promptActions = () => {
+	inquirer
+		.prompt([
+			{
+				type    : 'list',
+				name    : 'action',
+				message : 'What would you like to do?',
+				choices : [
+					'View all departments',
+					'View all roles',
+					'View all employees',
+					'Add a department',
+					'Add a role',
+					'Add an employee',
+					'Update an employee role',
+					'Quit'
+				]
+			}
+		])
+		.then(({ action }) => {
+			switch (action) {
+				case 'View all departments':
+					console.log('viewing all departments');
+					query
+						.viewDept()
+						.then(([ row ]) => {
+							console.table(row);
+							promptActions();
+						})
+						.catch(console.log);
+					break;
+
+				case 'View all roles':
+					console.log('viewing all roles');
+					query
+						.viewRoles()
+						.then(([ row ]) => {
+							console.table(row);
+							promptActions();
+						})
+						.catch(console.log);
+					break;
+
+				case 'View all employees':
+					console.log('viewing all employees');
+					query
+						.viewEmployees()
+						.then(([ row ]) => {
+							console.table(row);
+							promptActions();
+						})
+						.catch(console.log);
+					break;
+
+				case 'Add a department':
+					console.log('add a department in process');
+					promptAddDepartment();
+					break;
+
+				case 'Add a role':
+					console.log('');
+					promptAddRole();
+					break;
+
+				case 'Add an employee':
+					console.log('add an employee in process');
+					promptAddEmployee();
+					break;
+
+				case 'Update an employee role':
+					console.log('update an employee role in process');
+					promptUpdateEmp();
+					break;
+
+				case 'Quit':
+					console.log('quitting session');
+					console.log(
+						logo({
+							name: 'See ya!',
+							logoColor: 'cyan',
+							borderColor: 'yellow'
+						}).render()
+					);
+					query.quit();
+					break;
+				default:
+          console.log('Error');
+					break;
+			}
+		});
 };
 
-function viewDepts() {
-    db.getAllDept()
-        .then(([rows, fields]) => {
-            const departments = rows;
-            console.table(departments);
-        })
-        .then(() => listOfPrompts());
+const promptAddDepartment = () => {
+	inquirer
+		.prompt([
+			{
+				type    : 'input',
+				name    : 'department',
+				message : 'What is the name of the department you would like to add?'
+			}
+		])
+		.then(({ department }) => {
+			query
+				.addDepartment(department)
+				.then(() => {
+					console.log(
+						logo({
+							name: '\nNew Department Added!\n',
+							logoColor: 'bold-green',
+							borderColor: 'bold-green'
+						}).render()
+					);
+					promptActions();
+				})
+				.catch(console.log);
+		});
 };
 
-function viewRoles() {
-    db.getAllRoles()
-        .then(([rows, fields]) => {
-            const roles = rows;
-            console.table(roles);
-        })
-        .then(() => listOfPrompts());
+const promptAddRole = () => {
+  // generate department choices dynamically from db
+	query.deptsArray().then((deptChoices) => {
+		inquirer
+			.prompt([
+				{
+					type    : 'input',
+					name    : 'title',
+					message : 'What is the name of the role you would like to add?'
+				},
+				{
+					type    : 'input',
+					name    : 'salary',
+					message : 'What is the salary for this role?'
+				},
+				{
+					type    : 'list',
+					name    : 'department',
+					message : 'Please select the department this role belongs to',
+					choices : deptChoices
+				}
+			])
+			.then((roleObj) => {
+				query
+					.addRole(roleObj)
+					.then(() => {
+						console.log(
+							logo({
+								name: '\nNew Role Added!\n',
+								logoColor: 'bold-green',
+								borderColor: 'bold-green'
+							}).render()
+						);
+						promptActions();
+					})
+					.catch(console.log);
+			});
+	});
 };
 
-function viewEmployees() {
-    db.getAllEmployees()
-        .then(([rows, fields]) => {
-            const employee = rows;
-            console.table(employee)
-        })
-        .then(() => listOfPrompts());
+const promptAddEmployee = () => {
+  // generate role and manager choices dynamically from db
+	query.rolesArray().then((roleChoices) => {
+		query.employeesArray().then((employeeChoices) => {
+			inquirer
+				.prompt([
+					{
+						type    : 'input',
+						name    : 'firstName',
+						message : "What is the new employee's first name?"
+					},
+					{
+						type    : 'input',
+						name    : 'lastName',
+						message : "What is the employee's last name?"
+					},
+					{
+						type    : 'list',
+						name    : 'title',
+						message : "Select the employee's role",
+						choices : roleChoices
+					},
+					{
+						type    : 'list',
+						name    : 'manager',
+						message : "Select the employee's manager",
+						choices : employeeChoices
+					}
+				])
+				.then((addEmpObj) => {
+					query
+						.addEmployee(addEmpObj)
+						.then(() => {
+							console.log(
+								logo({
+									name: '\nNew Employee Added!\n',
+									logoColor: 'bold-green',
+									borderColor: 'bold-green'
+								}).render()
+							);
+							promptActions();
+						})
+						.catch(console.log);
+				});
+		});
+	});
 };
 
-function addDept() {
-    inquirer.prompt([
-        {
-            type: 'text',
-            name: 'name',
-            message: 'What department would you like to add?'
-        }
-    ])
-        .then(res => {
-            const name = res;
-            db.addDeptartment(name)
-                .then(() => console.log(`Added ${name.name} to list of departments!`))
-                .then(() => listOfPrompts())
-        })
+const promptUpdateEmp = () => {
+  // generate employee and role choices dynamically from db
+	query.employeesArray().then((employeeChoices) => {
+		query.rolesArray().then((roleChoices) => {
+			inquirer
+				.prompt([
+					{
+						type    : 'list',
+						name    : 'employee',
+						message : 'Please select the employee to update',
+						choices : employeeChoices
+					},
+					{
+						type    : 'list',
+						name    : 'newRole',
+						message : "Please select the employee's new role",
+						choices : roleChoices
+					}
+				])
+				.then((updateRoleObj) => {
+					query
+						.updateEmployeeRole(updateRoleObj)
+						.then(() => {
+							console.log(
+								logo({
+									name: '\nUpdated Employee Role!\n',
+									logoColor: 'bold-green',
+									borderColor: 'bold-green'
+								}).render()
+							);
+							promptActions();
+						})
+						.catch(console.log);
+				});
+		});
+	});
 };
 
-function addRole() {
-    db.getAllDept()
-        .then(([rows]) => {
-            const departments = rows;
-            const departmentChoices = departments.map(({ id, name }) => ({
-                name: name,
-                value: id
-            }));
-
-            inquirer.prompt([
-                {
-                    type: 'text',
-                    name: 'title',
-                    message: "Please add the role's name."
-
-                },
-                {
-                    type: 'text',
-                    name: 'salary',
-                    message: "What is the role's salary?"
-                },
-                {
-                    type: 'list',
-                    name: 'department_id',
-                    message: "What department does the role belong to?",
-                    choices: departmentChoices
-                }
-            ])
-                .then(role => {
-                    db.addNewRole(role)
-                        .then(() => console.log(`Successfully added ${role.title}!`))
-                        .then(() => listOfPrompts())
-                })
-        });
-};
-
-
-function addEmployee() {
-    inquirer.prompt([
-        {
-            type: 'text',
-            name: 'first_name',
-            message: "What is the employee's first name?"
-        },
-        {
-            name: 'last_name',
-            message: "What is the employee's last name?"
-        }
-    ])
-        .then(res => {
-            const firstName = res.first_name;
-            const lastName = res.last_name;
-
-            db.getAllRoles()
-                .then(([rows]) => {
-                    const roles = rows;
-                    const roleChoices = roles.map(({ id, title }) => ({
-                        name: title,
-                        value: id
-                    }));
-                    inquirer.prompt({
-                        type: 'list',
-                        name: 'roleId',
-                        message: "What is the employee's role?",
-                        choices: roleChoices
-                    })
-                        .then(res => {
-                            const roleId = res.roleId;
-
-                            db.getAllEmployees()
-                                .then(([rows]) => {
-                                    const employees = rows;
-                                    const managerChoices = employees.map(({ id, first_name, last_name }) => ({
-                                        name: `${first_name} ${last_name}`,
-                                        value: id
-                                    }));
-                                    managerChoices.unshift({ name: "none", value: null });
-
-                                    inquirer.prompt({
-                                        type: "list",
-                                        name: "managerId",
-                                        message: "Who is the employee's manager?",
-                                        choices: managerChoices
-                                    })
-                                        .then(res => {
-                                            const employee = {
-                                                manager_id: res.managerId,
-                                                role_id: roleId,
-                                                first_name: firstName,
-                                                last_name: lastName
-                                            }
-                                            db.addNewEmployee(employee);
-                                        })
-                                        .then(() => listOfPrompts())
-                                })
-                        })
-                })
-        })
-
-
-
-};
-
-function updateRole() {
-    db.getAllEmployees()
-        .then(([rows]) => {
-            const employees = rows;
-            const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
-                name: `${first_name} ${last_name}`,
-                value: id
-            }));
-
-            inquirer.prompt([
-                {
-                    type: "list",
-                    name: "employeeId",
-                    message: "Which employee's role do you want to update?",
-                    choices: employeeChoices
-                }
-            ])
-                .then(res => {
-                    let employeeId = res.employeeId;
-                    db.getAllRoles()
-                        .then(([rows]) => {
-                            let roles = rows;
-                            const roleChoices = roles.map(({ id, title }) => ({
-                                name: title,
-                                value: id
-                            }));
-
-                            inquirer.prompt([
-                                {
-                                    type: "list",
-                                    name: "roleId",
-                                    message: "Which role do you want to assign the selected employee?",
-                                    choices: roleChoices
-                                }
-                            ])
-                                .then(res => db.updateEmployeeRole(employeeId, res.roleId))
-                                .then(() => console.log("Updated employee's role"))
-                                .then(() => listOfPrompts())
-                        });
-                });
-        })
-};
-
-function quit() {
-    console.log("See you later!");
-    process.exit();
-}
-
-listOfPrompts();
+// console.log(logo(config).render());
+console.log(
+	logo({
+		name: 'Employee Tracker Database!',
+		logoColor: 'cyan',
+		borderColor: 'yellow'
+	}).render()
+);
+promptActions();
